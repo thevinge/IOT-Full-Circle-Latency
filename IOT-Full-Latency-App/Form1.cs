@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,16 +24,35 @@ namespace IOT_Full_Latency_App
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var StartDatetimes = new List<DateTime>();
-            var serialSignalGenerator = new SerialSignalGenerator();
-            serialSignalGenerator.dateTimes = StartDatetimes;
+            var startDtSignalGenerator = new List<DateTime>();
+            var serialSignalGenerator = new SerialSignalGenerator("COM5");
+            serialSignalGenerator.dateTimes = startDtSignalGenerator;
             serialSignalGenerator.RunningMinutes = 30;
-            var thread1 = new Thread(serialSignalGenerator.Start);
-            thread1.Start();
-            Thread.Sleep(5000);
+            var threadGenerator = new Thread(serialSignalGenerator.Start);
 
-            Console.WriteLine(serialSignalGenerator.dateTimes);
-            
+            var endDtSignalReceiver = new List<DateTime>();
+            var serialSignalReceiver = new SignalReceiver("COM6");
+            serialSignalReceiver.dateTimes = endDtSignalReceiver;
+          
+            var threadReceiver = new Thread(serialSignalReceiver.Start);
+
+            threadReceiver.Start();
+            threadGenerator.Start();
+            threadGenerator.Join();
+            threadReceiver.Join();
+
+            var result =serialSignalGenerator.dateTimes.Zip(serialSignalReceiver.dateTimes).Select(tuple =>
+                {
+                    return (tuple.Second.Ticks - tuple.First.Ticks) * 100;
+                });
+
+            var writer = new StreamWriter("result.txt");
+            foreach (var line in result)
+            {
+                writer.WriteLine(line);
+            }
+            writer.Flush();
+            writer.Close();
         }
     }
 }

@@ -7,8 +7,13 @@ namespace IOT_Full_Latency_App.Communication
 {
     public class SerialSignalGenerator
     {
-        private SerialPort sp = new SerialPort("COM5");
+        private SerialPort sp;
         public List<DateTime> dateTimes { get; set; }
+
+        public SerialSignalGenerator(string port)
+        {
+            sp = new SerialPort(port);
+        }
 
         public int RunningMinutes { get; set; }
 
@@ -26,7 +31,7 @@ namespace IOT_Full_Latency_App.Communication
                 dateTimes.Add(DateTime.Now);
                 sp.Write($"{command}");
                 i++;
-                Thread.Sleep(1000);
+                Thread.Sleep(2000);
             }
         }
     }

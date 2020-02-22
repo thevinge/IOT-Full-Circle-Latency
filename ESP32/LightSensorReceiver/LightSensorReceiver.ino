@@ -6,13 +6,13 @@
 BH1750 sensor(LOW);
 
 
+bool lookForHigh = true;
 void setup()
 {
     Serial.begin(115200);
     while (!Serial) {
         ;
     }
-    Serial.println(F("BH1750 continues measurement basic example"));
 
     // Initialize I2C bus
     Wire.begin(25,26);
@@ -33,9 +33,22 @@ void loop()
         // Read light
         lux = sensor.read();
 
+        sendReceived(lux);
         // Print light
-        Serial.print(F("Light: "));
-        Serial.print(lux);
-        Serial.println(F(" LUX"));
+        //Serial.print(F("Light: "));
+        //Serial.print(lux);
+        //Serial.println(F(" LUX"));
     }
+}
+
+void sendReceived(uint16_t received){
+  //Serial.print(received);
+  if (lookForHigh && received > 0){
+    Serial.println(1);
+    lookForHigh = false;
+  } else if (!lookForHigh && received == 0) {
+    Serial.println(1);
+    lookForHigh = true;
+  }
+  
 }
