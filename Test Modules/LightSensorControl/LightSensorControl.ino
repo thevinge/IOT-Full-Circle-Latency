@@ -18,7 +18,7 @@ void setup()
     Wire.begin(25,26);
 
     // Initialize sensor in continues mode, medium 1 lx resolution
-    sensor.begin(ModeContinuous, ResolutionMid);
+    sensor.begin(ModeContinuous, ResolutionLow);
 
     // Start conversion
     sensor.startConversion();

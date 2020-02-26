@@ -27,7 +27,7 @@ namespace IOT_Full_Latency_App
             var startDtSignalGenerator = new List<DateTime>();
             var serialSignalGenerator = new SerialSignalGenerator("COM5");
             serialSignalGenerator.dateTimes = startDtSignalGenerator;
-            serialSignalGenerator.RunningMinutes = 30;
+            serialSignalGenerator.RunningMinutes = 1;
             var threadGenerator = new Thread(serialSignalGenerator.Start);
 
             var endDtSignalReceiver = new List<DateTime>();

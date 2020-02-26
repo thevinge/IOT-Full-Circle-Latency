@@ -19,7 +19,7 @@ namespace IOT_Full_Latency_App.Communication
 
         public void Start()
         {
-            sp.BaudRate = 9600;
+            sp.BaudRate = 115200;
             sp.Open();
 
             var i = 1;
